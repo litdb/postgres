@@ -21,16 +21,19 @@
   "keywords": [
     "bun"
   ],
-  "license": "MIT",
-  "homepage": "https://github.com/wobsoriano/pkg-name#readme",
+  "license": "BSD-3-Clause",
+  "homepage": "https://github.com/litdb/litdb",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wobsoriano/pkg-name.git"
+    "url": "git+https://github.com/litdb/postgres.git.git"
   },
-  "bugs": "https://github.com/wobsoriano/pkg-name/issues",
-  "author": "Robert Soriano <sorianorobertc@gmail.com>",
+  "bugs": "https://github.com/litdb/litdb/discussions",
+  "author": "Demis Bellot <https://github.com/mythz>",
   "devDependencies": {
     "bun-plugin-dts": "^0.3.0",
     "@types/bun": "^1.1.10"
+  },
+  "dependencies": {
+    "postgres": "^3.4.5"
   }
 }
