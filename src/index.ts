@@ -425,22 +425,22 @@ class PostgresDbConnection extends DbConnection {
     }
 
     all<RetType>(strings: TemplateStringsArray | SqlBuilder | Fragment | IntoFragment<RetType>, ...params: any[]) {
-        const [stmt, p, into] = this.prepare<T>(strings, ...params)
+        const [stmt, p, into] = this.prepare<RetType>(strings, ...params)
         if (into) {
-            const use = (stmt as PostgresStatement<T,any>).as(into as Constructor<T>)
-            return (Array.isArray(p) ? use.all(...p) : use.all(p)) as Promise<T[]>
+            const use = (stmt as PostgresStatement<RetType,any>).as(into as Constructor<RetType>)
+            return (Array.isArray(p) ? use.all(...p) : use.all(p)) as Promise<RetType[]>
         } else {
             return Array.isArray(p) ? stmt.all(...p) : stmt.all(p)
         }
     }
 
     one<RetType>(strings: TemplateStringsArray | SqlBuilder | Fragment | IntoFragment<RetType>, ...params: any[]) {
-        const [stmt, p, into] = this.prepare<T>(strings, ...params)
+        const [stmt, p, into] = this.prepare<RetType>(strings, ...params)
         if (into) {
-            const use = (stmt as PostgresStatement<T,any>).as(into as Constructor<T>)
-            return (Array.isArray(p) ? use.one(...p) : use.one(p)) as Promise<T>
+            const use = (stmt as PostgresStatement<RetType,any>).as(into as Constructor<RetType>)
+            return (Array.isArray(p) ? use.one(...p) : use.one(p)) as Promise<Awaited<RetType> | null>
         } else {
-            return Array.isArray(p) ? stmt.one(...p) : stmt.one(p)
+            return (Array.isArray(p) ? stmt.one(...p) : stmt.one(p)) as Promise<Awaited<RetType> | null>
         }
     }
 
