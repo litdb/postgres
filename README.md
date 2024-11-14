@@ -1,6 +1,6 @@
 # postgres
 
-litdb driver for [node-postgres](https://node-postgres.com)
+litdb driver for [postgres.js](https://github.com/porsager/postgres)
 
 ## Install
 
@@ -19,7 +19,7 @@ export const connection = connect({ hostname, database, user, password })
 export const { $, async:db, native:sql } = connection
 ```
 
-> When needed use `sql` to access postgres.js native sql function
+> When needed use `sql` to access [postgres.js native sql](https://github.com/porsager/postgres#usage) function
 
 **app.ts**
 
