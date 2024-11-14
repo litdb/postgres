@@ -1,4 +1,4 @@
 import { connect } from "../src"
 
 export const connection = connect({ hostname:'localhost',database:'test',user:'test',password:'test' })
-export const { $, async: db } = connection
+export const { $, async:db, native:sql } = connection

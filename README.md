@@ -16,8 +16,10 @@ npm install @litdb/postgres
 import { connect } from "@litdb/postgres"
 
 export const connection = connect({ hostname, database, user, password })
-export const { $, async:db } = connection
+export const { $, async:db, native:sql } = connection
 ```
+
+> When needed use `sql` to access postgres.js native sql function
 
 **app.ts**
 

@@ -88,7 +88,7 @@ class DriverStatement<RetType, ParamsType extends DbBinding[]> {
 
     unsafe<T extends any[]>(sql: string, paramValues?: any[] | undefined) {
         // console.log('unsafe', sql, paramValues)
-        return this.connection.db.unsafe<T>(sql, paramValues)
+        return this.connection.native.unsafe<T>(sql, paramValues)
     }
 
     async all(...params: ParamsType) {
@@ -270,7 +270,7 @@ export class PostgresConnection implements Connection, SyncConnection {
     schema: Schema
     dialect: Dialect
 
-    constructor(public db:ReturnType<typeof postgres>, public driver:Driver & {
+    constructor(public native:ReturnType<typeof postgres>, public driver:Driver & {
         $:ReturnType<typeof Sql.create>
     }) {
         this.$ = driver.$
@@ -313,7 +313,7 @@ export class PostgresConnection implements Connection, SyncConnection {
     }
 
     close() { 
-        return this.db.end()
+        return this.native.end()
     }
     closeSync() { throw NotImplemented() }
 }
