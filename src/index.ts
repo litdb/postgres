@@ -153,10 +153,10 @@ export class PostgresStatement<RetType, ParamsType extends DbBinding[]>
     }
 
     result(o:any) {
-        return this._as && IS.obj(o) 
-            ? new (this._as as Constructor<any>)(o) 
-            : o == null
-                ? null
+        return o == null
+            ? null
+            : this._as && IS.obj(o) 
+                ? new (this._as as Constructor<any>)(o) 
                 : o
     }
 
