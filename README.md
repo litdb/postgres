@@ -13,10 +13,10 @@ npm install @litdb/postgres
 **db.ts**
 
 ```ts
-import { connect } from "@litdb/bun-sqlite"
+import { connect } from "@litdb/postgres"
 
 export const connection = connect({ hostname, database, user, password })
-export const { $, async: db } = connection
+export const { $, async:db } = connection
 ```
 
 **app.ts**
