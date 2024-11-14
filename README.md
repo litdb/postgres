@@ -35,11 +35,15 @@ await db.insertAll([
 ])
 
 const janeEmail = 'jane@mail.org'
-const jane = (await db.one<Contact>($.from(Contact).where(c => $`${c.email} = ${janeEmail}`)))!
+const jane = await db.one<Contact>($.from(Contact).where(c => $`${c.email}=${janeEmail}`))
 
 // Insert examples
-const {lastInsertRowid:bobId} = await db.insert(new Contact({ name:"Bob", email:"bob@mail.org"}))
-const {lastInsertRowid} = await db.exec`INSERT INTO Contact(name,email) VALUES('Jo','jo@doe.org')`
+const { lastInsertRowid:bobId } = await db.insert(
+    new Contact({ name:"Bob", email:"bob@mail.org"}))
+
+const { lastInsertRowid } = await db.exec
+    `INSERT INTO Contact(name,email) VALUES('Jo','jo@doe.org')`
+
 const name = 'Alice', email = 'alice@mail.org'
 await db.exec`INSERT INTO Contact(name,email) VALUES (${name}, ${email})`
 
