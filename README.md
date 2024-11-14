@@ -62,7 +62,8 @@ const bobArray = await db.array($.from(Contact).where(hasId(bobId)))        // =
 jane.email = 'jane@doe.org'
 await db.update(jane)                           // Update all properties
 await db.update(jane, { onlyProps:['email'] })  // Update only email
-await db.exec($.update(Contact).set({ email:jane.email }).where(hasId(jane.id))) // query builder
+// query builder
+await db.exec($.update(Contact).set({ email:jane.email }).where(hasId(jane.id)))
 
 // Delete examples
 await db.delete(jane)
