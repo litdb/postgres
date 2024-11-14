@@ -52,7 +52,7 @@ const hasId = <Table extends { id:number }>(id:number|bigint) =>
     (x:Table) => $.sql($`${x.id} = $id`, { id })
 
 const contacts = await db.all($.from(Contact).into(Contact))                // => Contact[]
-const bob = await db.one($.from(Contact).where(hasId(bobId)).into(Contact)) // => Contact    
+const bob = await db.one($.from(Contact).where(hasId(bobId)).into(Contact)) // => Contact
 const contactsCount = await db.value($.from(Contact).select`COUNT(*)`)      // => number
 const emails = await db.column($.from(Contact).select(c => $`${c.email}`))  // => string[]
 const contactsArray = await db.arrays($.from(Contact))                      // => any[][]
