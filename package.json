@@ -41,7 +41,7 @@
   },
   "dependencies": {
     "@types/node": "^22.9.0",
-    "litdb": "^0.0.18",
+    "litdb": "^0.0.20",
     "postgres": "^3.4.5"
   }
 }

@@ -226,14 +226,6 @@ export class PostgreSqlTypes implements DialectTypes {
     }
 }
 
-
-export class PostgreSqlSchema2 extends PostgreSqlSchema {
-    sqlTableNames() {
-        return "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE'"
-    }
-}
-
-
 export class Postgres implements Driver
 {
     name: string
@@ -251,14 +243,14 @@ export class Postgres implements Driver
     types: DialectTypes
 
     converters: { [key: string]: TypeConverter } = {
-        ...converterFor(DateTimeConverter.instance, "DATE", "DATETIME", "TIMESTAMP", "TIMESTAMPZ"),
+        ...converterFor(new DateTimeConverter, "DATE", "DATETIME", "TIMESTAMP", "TIMESTAMPZ"),
     }
 
     constructor() {
         this.dialect = new PostgreSqlDialect()
         this.$ = this.dialect.$
         this.name = this.constructor.name
-        this.schema = this.$.schema = new PostgreSqlSchema2(this)
+        this.schema = this.$.schema = new PostgreSqlSchema(this)
         this.types = new PostgreSqlTypes()
     }
 }
@@ -414,14 +406,14 @@ class PostgresDbConnection extends DbConnection {
         return this.column<string>({ sql: this.schema.sqlTableNames(), params:{} })
     }
 
-    dropTable<Table extends ClassParam>(table:Table) { 
+    async dropTable<Table extends ClassParam>(table:Table) { 
         let stmt = this.connection.prepare(this.schema.dropTable(table) )
-        return stmt.exec()
+        await stmt.run()
     }
 
-    createTable<Table extends ClassParam>(table:Table) {
+    async createTable<Table extends ClassParam>(table:Table) {
         let stmt = this.connection.prepare(this.schema.createTable(table))
-        return stmt.exec()
+        await stmt.run()
     }
 
     all<RetType>(strings: TemplateStringsArray | SqlBuilder | Fragment | IntoFragment<RetType>, ...params: any[]) {
