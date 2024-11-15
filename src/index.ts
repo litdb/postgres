@@ -1,20 +1,12 @@
 import postgres, { Options } from "postgres"
 import type { 
-    Driver, Connection, SyncConnection, DbBinding, Statement, TypeConverter, Fragment, SyncStatement, Dialect,
-    Changes, ColumnType, Constructor,
-    ClassInstance,
-    ReflectMeta,
-    InsertOptions,
-    UpdateOptions,
-    DeleteOptions,
-    ClassParam,
-    SqlBuilder,
-    IntoFragment,
+    Driver, Connection, SyncConnection, DbBinding, Statement, Fragment, SyncStatement, Dialect,
+    Changes, ColumnType, Constructor, ClassInstance, ReflectMeta, InsertOptions, UpdateOptions,
+    DeleteOptions, ClassParam, SqlBuilder, IntoFragment,
 } from "litdb"
 import { 
-    Sql, DbConnection, NamingStrategy, SyncDbConnection, DefaultValues, converterFor, DateTimeConverter, 
-    DialectTypes, PostgreSqlDialect, DefaultStrategy, Schema, IS, Meta,
-    PostgreSqlSchema,
+    Sql, DbConnection, NamingStrategy, SyncDbConnection, DialectTypes, PostgreSqlDialect, DefaultStrategy, 
+    Schema, IS, Meta, PostgreSqlSchema,
 } from "litdb"
 
 type DriverStatementQuery = {
@@ -233,25 +225,12 @@ export class Postgres implements Driver
     schema:Schema
     $:ReturnType<typeof Sql.create>
     strategy:NamingStrategy = new DefaultStrategy()
-    variables: { [key: string]: string } = {
-        [DefaultValues.NOW]: 'CURRENT_TIMESTAMP',
-        [DefaultValues.MAX_TEXT]: 'TEXT',
-        [DefaultValues.MAX_TEXT_UNICODE]: 'TEXT',
-        [DefaultValues.TRUE]: '1',
-        [DefaultValues.FALSE]: '0',
-    }
-    types: DialectTypes
-
-    converters: { [key: string]: TypeConverter } = {
-        ...converterFor(new DateTimeConverter, "DATE", "DATETIME", "TIMESTAMP", "TIMESTAMPZ"),
-    }
 
     constructor() {
         this.dialect = new PostgreSqlDialect()
         this.$ = this.dialect.$
         this.name = this.constructor.name
-        this.schema = this.$.schema = new PostgreSqlSchema(this)
-        this.types = new PostgreSqlTypes()
+        this.schema = this.$.schema = new PostgreSqlSchema(this, this.$, new PostgreSqlTypes())
     }
 }
 
