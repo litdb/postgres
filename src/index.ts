@@ -138,32 +138,26 @@ export class PostgresStatement<RetType, ParamsType extends DbBinding[]>
     implements Statement<RetType, ParamsType>, SyncStatement<RetType, ParamsType>
 {
     native: DriverStatement<RetType, ParamsType>
+    $:ReturnType<typeof Sql.create>
     _as?:RetType
 
-    constructor(statement: DriverStatement<RetType, ParamsType>) {
+    constructor(statement: DriverStatement<RetType, ParamsType>, $:ReturnType<typeof Sql.create>) {
         this.native = statement
-    }
-
-    result(o:any) {
-        return o == null
-            ? null
-            : this._as && IS.obj(o) 
-                ? new (this._as as Constructor<any>)(o) 
-                : o
+        this.$ = $
     }
 
     as<T extends Constructor<any>>(t:T) {
-        const clone = new PostgresStatement<T,ParamsType>(this.native)
+        const clone = new PostgresStatement<T,ParamsType>(this.native, this.$)
         clone._as = t
         return clone
     }
 
     async all(...params: ParamsType): Promise<RetType[]> {
-        return (await this.native.all(...params)).map((x:any) => this.result(x))
+        return (await this.native.all(...params)).map((x:any) => this.$.schema.toResult(x, this._as as ClassParam))
     }
 
     async one(...params: ParamsType): Promise<RetType | null> {
-        return this.result(await this.native.get(...params))
+        return this.$.schema.toResult(await this.native.get(...params), this._as as ClassParam)
     }
 
     async column<ReturnValue>(...params: ParamsType): Promise<ReturnValue[]> {
@@ -261,9 +255,9 @@ export class PostgresConnection implements Connection, SyncConnection {
                     sb += `$${i+1}`
                 }
             }
-            return new PostgresStatement(DriverStatement.forPositionalParams<RetType,ParamsType>(this, sb, params))
+            return new PostgresStatement(DriverStatement.forPositionalParams<RetType,ParamsType>(this, sb, params), this.$)
         } else {
-            return new PostgresStatement(DriverStatement.forNamedParams<RetType,ParamsType>(this, sql, params))
+            return new PostgresStatement(DriverStatement.forNamedParams<RetType,ParamsType>(this, sql, params), this.$)
         }
     }
 
@@ -277,9 +271,9 @@ export class PostgresConnection implements Connection, SyncConnection {
                     sb += `$${i+1}`
                 }
             }
-            return new PostgresStatement(DriverStatement.forPositionalParams<RetType,ParamsType>(this, sb, params))
+            return new PostgresStatement(DriverStatement.forPositionalParams<RetType,ParamsType>(this, sb, params), this.$)
         } else {
-            return new PostgresStatement(DriverStatement.forNamedParams<RetType,ParamsType>(this, sql, params))
+            return new PostgresStatement(DriverStatement.forNamedParams<RetType,ParamsType>(this, sql, params), this.$)
         }
     }
 
